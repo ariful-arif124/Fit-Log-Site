@@ -1,7 +1,7 @@
 "use client";
 
-import { useFitLog } from "@/context/FitLogContext";
 import { Workout } from "@/types/workout";
+import { useFitLog } from "@/context/FitLogContext";
 import { toast } from "react-toastify";
 
 interface WorkoutActionsProps {
@@ -39,16 +39,15 @@ export default function WorkoutActions({
       return;
     }
 
-    const saved = saveWorkout(workout);
+    const savedSuccessfully = saveWorkout(workout);
 
-    if (saved) {
+    if (savedSuccessfully) {
       toast.success("Saved for later");
     }
   };
 
   return (
     <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-      
       <button
         onClick={handleAddToPlan}
         className="rounded-md bg-[#ccff00] px-6 py-3 text-sm font-black uppercase text-black transition hover:bg-white"
@@ -62,7 +61,6 @@ export default function WorkoutActions({
       >
         Save for Later
       </button>
-
     </div>
   );
 }

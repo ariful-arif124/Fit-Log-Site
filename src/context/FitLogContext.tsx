@@ -37,7 +37,6 @@ export function FitLogProvider({
 }) {
   const [plan, setPlan] = useState<Workout[]>([]);
   const [saved, setSaved] = useState<Workout[]>([]);
-
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -53,7 +52,7 @@ export function FitLogProvider({
         setSaved(JSON.parse(storedSaved));
       }
     } catch (error) {
-      console.error("Failed to load FitLog data:", error);
+      console.error("Error loading FitLog data:", error);
     } finally {
       setHydrated(true);
     }
@@ -119,11 +118,11 @@ export function FitLogProvider({
     );
   };
 
-  const isInPlan = (id: number): boolean => {
+  const isInPlan = (id: number) => {
     return plan.some((workout) => workout.id === id);
   };
 
-  const isSaved = (id: number): boolean => {
+  const isSaved = (id: number) => {
     return saved.some((workout) => workout.id === id);
   };
 
