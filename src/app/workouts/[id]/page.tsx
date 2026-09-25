@@ -33,7 +33,7 @@ export default async function WorkoutDetailsPage({
           />
         </div>
 
-        <div className="flex flex-col justify-center p-6 md:p-10 lg:p-14">
+        <div className="flex flex-col justify-center p-6 md:p-10 lg:p-14 gap-2">
           {workout.muscleGroups.map((muscle) => (
             <span
               key={muscle}

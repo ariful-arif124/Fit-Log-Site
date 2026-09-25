@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+
 import { Workout } from "@/types/workout";
 
 interface FitLogContextType {
@@ -15,8 +16,10 @@ interface FitLogContextType {
 
   addToPlan: (workout: Workout) => boolean;
   saveWorkout: (workout: Workout) => boolean;
+
   removeFromPlan: (id: number) => void;
   removeFromSaved: (id: number) => void;
+
   markAsDone: (id: number) => void;
 
   isInPlan: (id: number) => boolean;
@@ -27,32 +30,54 @@ const FitLogContext = createContext<FitLogContextType | undefined>(
   undefined
 );
 
-export function FitLogProvider({ children }: { children: ReactNode }) {
+export function FitLogProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [plan, setPlan] = useState<Workout[]>([]);
   const [saved, setSaved] = useState<Workout[]>([]);
 
+  const [hydrated, setHydrated] = useState(false);
+
   useEffect(() => {
-    const storedPlan = localStorage.getItem("fitlog-plan");
-    const storedSaved = localStorage.getItem("fitlog-saved");
+    try {
+      const storedPlan = localStorage.getItem("fitlog-plan");
+      const storedSaved = localStorage.getItem("fitlog-saved");
 
-    if (storedPlan) {
-      setPlan(JSON.parse(storedPlan));
-    }
+      if (storedPlan) {
+        setPlan(JSON.parse(storedPlan));
+      }
 
-    if (storedSaved) {
-      setSaved(JSON.parse(storedSaved));
+      if (storedSaved) {
+        setSaved(JSON.parse(storedSaved));
+      }
+    } catch (error) {
+      console.error("Failed to load FitLog data:", error);
+    } finally {
+      setHydrated(true);
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("fitlog-plan", JSON.stringify(plan));
-  }, [plan]);
+    if (!hydrated) return;
+
+    localStorage.setItem(
+      "fitlog-plan",
+      JSON.stringify(plan)
+    );
+  }, [plan, hydrated]);
 
   useEffect(() => {
-    localStorage.setItem("fitlog-saved", JSON.stringify(saved));
-  }, [saved]);
+    if (!hydrated) return;
 
-  const addToPlan = (workout: Workout) => {
+    localStorage.setItem(
+      "fitlog-saved",
+      JSON.stringify(saved)
+    );
+  }, [saved, hydrated]);
+
+  const addToPlan = (workout: Workout): boolean => {
     if (plan.length >= 5) {
       return false;
     }
@@ -66,7 +91,7 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
-  const saveWorkout = (workout: Workout) => {
+  const saveWorkout = (workout: Workout): boolean => {
     if (saved.some((item) => item.id === workout.id)) {
       return false;
     }
@@ -77,22 +102,28 @@ export function FitLogProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromPlan = (id: number) => {
-    setPlan((current) => current.filter((workout) => workout.id !== id));
+    setPlan((current) =>
+      current.filter((workout) => workout.id !== id)
+    );
   };
 
   const removeFromSaved = (id: number) => {
-    setSaved((current) => current.filter((workout) => workout.id !== id));
+    setSaved((current) =>
+      current.filter((workout) => workout.id !== id)
+    );
   };
 
   const markAsDone = (id: number) => {
-    setPlan((current) => current.filter((workout) => workout.id !== id));
+    setPlan((current) =>
+      current.filter((workout) => workout.id !== id)
+    );
   };
 
-  const isInPlan = (id: number) => {
+  const isInPlan = (id: number): boolean => {
     return plan.some((workout) => workout.id === id);
   };
 
-  const isSaved = (id: number) => {
+  const isSaved = (id: number): boolean => {
     return saved.some((workout) => workout.id === id);
   };
 
@@ -119,7 +150,9 @@ export function useFitLog() {
   const context = useContext(FitLogContext);
 
   if (!context) {
-    throw new Error("useFitLog must be used inside FitLogProvider");
+    throw new Error(
+      "useFitLog must be used inside FitLogProvider"
+    );
   }
 
   return context;
