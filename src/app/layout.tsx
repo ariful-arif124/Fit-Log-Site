@@ -3,6 +3,7 @@ import "./globals.css";
 import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "@/components/Navber";
+import Footer from "@/components/Footer";
 import { FitLogProvider } from "@/context/FitLogContext";
 import { ToastContainer } from "react-toastify";
 
@@ -23,6 +24,8 @@ export default function RootLayout({
           <Navbar />
 
           {children}
+
+          <Footer />
 
           <ToastContainer
             position="top-right"

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Workout } from "@/types/workout";
 import { useFitLog } from "@/context/FitLogContext";
+import { toast } from "react-toastify";
 
 interface PlanCardProps {
   workout: Workout;
@@ -20,13 +21,25 @@ export default function PlanCard({ workout, type }: PlanCardProps) {
   const handleRemove = () => {
     if (type === "plan") {
       removeFromPlan(workout.id);
+      toast.success("Removed from today's plan");
     } else {
       removeFromSaved(workout.id);
+      toast.success("Removed from saved");
     }
+  };
+
+  const handleDone = () => {
+    markAsDone(workout.id);
+    toast.success("Workout marked as done");
+  };
+
+  const handleViewDetails = () => {
+    toast.info("Opening workout details");
   };
 
   return (
     <div className="group flex items-center gap-4 rounded-xl border border-zinc-800 bg-[#15171c] p-3 transition hover:border-zinc-700 sm:p-4">
+
       <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-lg sm:h-20 sm:w-32">
         <Image
           src={workout.image}
@@ -53,8 +66,10 @@ export default function PlanCard({ workout, type }: PlanCardProps) {
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
+
         <Link
           href={`/workouts/${workout.id}`}
+          onClick={handleViewDetails}
           className="hidden rounded-full border border-zinc-700 px-4 py-2 text-[10px] font-bold uppercase text-zinc-300 transition hover:border-[#ccff00] hover:text-[#ccff00] sm:block"
         >
           View Details
@@ -62,7 +77,7 @@ export default function PlanCard({ workout, type }: PlanCardProps) {
 
         {type === "plan" && (
           <button
-            onClick={() => markAsDone(workout.id)}
+            onClick={handleDone}
             className="rounded-full bg-[#ccff00] px-4 py-2 text-[10px] font-black uppercase text-black transition hover:bg-white"
           >
             ✓ Mark as Done
@@ -76,6 +91,7 @@ export default function PlanCard({ workout, type }: PlanCardProps) {
         >
           ×
         </button>
+
       </div>
     </div>
   );
