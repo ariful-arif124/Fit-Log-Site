@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
+
 import Navbar from "@/components/Navber";
+import { FitLogProvider } from "@/context/FitLogContext";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "FitLog",
@@ -15,8 +19,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-black text-white">
-        <Navbar />
-        {children}
+        <FitLogProvider>
+          <Navbar />
+
+          {children}
+
+          <ToastContainer
+            position="top-right"
+            autoClose={2500}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            pauseOnHover
+            theme="dark"
+          />
+        </FitLogProvider>
       </body>
     </html>
   );
